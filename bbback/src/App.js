@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+const express = require("express");
+const cors = require("cors");
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>yohan
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+/// ---필요한 라우터 require ---
+const loginRouter = require("./routers/login");
+const accountRouter = require("./routers/account");
+const registerRouter = require("./routers/register");
+/// -------------------------------
 
-export default App;
+const app = express();
+
+// ------ 미들웨어 등록 ------
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+//------------------------
+
+// ------ 라우터 등록 ------
+app.use("/account", accountRouter);
+app.use("/login", loginRouter);
+app.use("/register", registerRouter);
+//--------------------------
+
+// ------ 오류처리 미들웨어 ------
+app.use((err, req, res, next) => {
+  res.json({
+    result: "fail",
+    message: err.message,
+  });
+});
+//------------------------
+
+module.exports = app;
