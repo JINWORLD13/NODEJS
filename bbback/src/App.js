@@ -5,6 +5,7 @@ const cors = require("cors");
 const loginRouter = require("./routers/login");
 const accountRouter = require("./routers/account");
 const registerRouter = require("./routers/register");
+const dataRouter = require("./routers/data")
 /// -------------------------------
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/account", accountRouter);
 app.use("/login", loginRouter);
 app.use("/register", registerRouter);
+app.use("/", dataRouter);
 //--------------------------
 
 // ------ 오류처리 미들웨어 ------
