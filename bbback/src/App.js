@@ -6,6 +6,7 @@ const cors = require("cors");
 const loginRouter = require("./routers/login");
 // const accountRouter = require("./routers/account");
 const registerRouter = require("./routers/register");
+const graphRouter = require("./routers/graph");
 /// -------------------------------
 
 ///----몽고DB 연결 ---------
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: false }));
 //------------------------
 
 // ------ 라우터 등록 ------
+app.use("/", graphRouter);
 // app.use("/account", accountRouter);
 app.use("/login", loginRouter);
 app.use("/register", registerRouter);
