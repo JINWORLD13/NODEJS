@@ -1,4 +1,4 @@
-const mysql = require("mysql");
+const mongoose = require("mongoose");
 const UserSchema = require("../schemas/user");
 
-exports.User = mysql.model("User", UserSchema);
+exports.User = mongoose.model("User", UserSchema);

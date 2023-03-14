@@ -1,9 +1,8 @@
-const { Schema } = require("mysql");
+const mongoose = require("mongoose");
 
-const UserSchema = new Schema(
+const UserSchema = mongoose.Schema(
   {
-    // userId: nanoId,
-    userName: {
+    name: {
       type: String,
       required: true,
     },
@@ -14,10 +13,6 @@ const UserSchema = new Schema(
     password: {
       type: String,
       required: true,
-    },
-    phone: {
-      type: String,
-      required: false,
     },
   },
   {
