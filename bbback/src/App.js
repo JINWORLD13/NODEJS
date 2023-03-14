@@ -44,7 +44,7 @@ app.use((err, req, res, next) => {
 });
 //------------------------
 ///------서버 생성------------
-const port = 5000;
+const port = 8080;
 app.listen(port, () =>
   console.log(`정상적으로 서버를 시작하였습니다. http://localhost:${port}`)
 );
