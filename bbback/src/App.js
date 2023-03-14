@@ -11,6 +11,7 @@ const loginRouter = require("./routers/login");
 // const accountRouter = require("./routers/account");
 const registerRouter = require("./routers/register");
 const graphRouter = require("./routers/graph");
+const districtsRouter = require("./routers/districts");
 /// -------------------------------
 
 ///----몽고DB 연결 ---------
@@ -42,6 +43,7 @@ app.use("/", graphRouter);
 // app.use("/account", accountRouter);
 app.use("/login", loginRouter);
 app.use("/register", registerRouter);
+app.use("/districts", districtsRouter);
 //--------------------------
 
 // ------ 오류처리 미들웨어 ------
