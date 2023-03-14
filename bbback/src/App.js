@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -11,7 +13,7 @@ const graphRouter = require("./routers/graph");
 
 ///----몽고DB 연결 ---------
 mongoose.set("strictQuery", false);
-mongoose.connect("mongodb+srv://team3:pt3@team3.i5gliew.mongodb.net/test");
+mongoose.connect(process.env.MONGODB_URL);
 mongoose.connection.on("connected", () => {
   console.log("정상적으로 DB와 연결되었습니다.   MongoDB Connected");
   console.log("--------------------------------------------");
