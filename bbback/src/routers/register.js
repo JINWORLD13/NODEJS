@@ -1,7 +1,7 @@
 //회원가입을 처리하는 핸들러
 const express = require("express");
 const router = express.Router();
-const getHash = require("../utils/hash-password");
+const getHash = require("../utils/hashPassword");
 const { User } = require("../db/models/model");
 
 router.post("/", async (req, res, next) => {

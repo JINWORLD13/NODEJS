@@ -2,10 +2,11 @@
 
 const express = require("express");
 const router = express.Router();
-const getHash = require("../utils/hash-password");
+const getHash = require("../utils/hashPassword");
 const { User } = require("../db/models/model");
 // jwt 생성 모듈
-const generateToken = require("../utils/generateToken");
+const createToken = require("../utils/createToken");
+const buildResponse = require("../utils/buildResponse")
 
 // 로그인 패스 접근시 (로그인 버튼 클릭시)
 router.post("/", async (req, res, next) => {
@@ -50,10 +51,12 @@ router.post("/", async (req, res, next) => {
     console.log(
       "------------------- 사용자 토큰 발급 시도 ------------------------"
     );
-    const token = generateToken(user._id.toJSON());
 
-    // 응답으로 JWT 전송
-    res.status(200).json({ JWT: token });
+    // (참고) createToken.js의 주석 중 (참고) 참조.
+    const token = createToken(req, res, next);
+
+    // 응답으로 토큰
+    res.status(200).json(buildResponse(token, 200));
     console.log(
       "------------------- 사용자 토큰 발급 완료 ------------------------"
     );

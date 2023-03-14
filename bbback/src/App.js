@@ -3,6 +3,8 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const AppError = require("./utils/AppError");
+const buildResponse = require("./utils/buildResponse");
 
 /// ---필요한 라우터 require ---
 const loginRouter = require("./routers/login");
@@ -17,6 +19,13 @@ mongoose.connect(process.env.MONGODB_URL);
 mongoose.connection.on("connected", () => {
   console.log("정상적으로 DB와 연결되었습니다.   MongoDB Connected");
   console.log("--------------------------------------------");
+});
+mongoose.connection.on('error', (error) => {
+  console.error('mongoDB connection error: ', error);
+});
+mongoose.connection.on('disconnected', () => {
+  console.error('lost connection to mongoDB. trying to reconnect');
+  mongoose.connect(process.env.MONGODB_URL); // 연결 재시도.
 });
 
 ///------------------------
@@ -36,17 +45,17 @@ app.use("/register", registerRouter);
 //--------------------------
 
 // ------ 오류처리 미들웨어 ------
+// ! 페이지를 따로 설정하지 않은 것들은 전부 404 에러가 표시되도록 함.
+app.use((_, __, next) => {
+  next(new AppError("resourceNotFoundError", "Resource not found", 404));
+}); 
 app.use((err, req, res, next) => {
-  res.json({
-    result: "fail",
-    message: err.message,
-  });
+  res.json(buildResponse(null, err.statusCode, err));
 });
 //------------------------
 ///------서버 생성------------
-const port = 8080;
-app.listen(port, () =>
-  console.log(`정상적으로 서버를 시작하였습니다. http://localhost:${port}`)
+app.listen(process.env.PORT, () =>
+  console.log(`정상적으로 서버를 시작하였습니다. http://localhost:${process.env.PORT}`)
 );
 ///--------------------------
 module.exports = app;

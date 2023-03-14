@@ -18,6 +18,12 @@ const UserSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
+    // (중요) role의 default 값 user로 하기
+    role: {
+      type: String,
+      default: "user",
+      required: true,
+    },
   },
   {
     timestamps: true,
