@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -6,12 +8,12 @@ const cors = require("cors");
 const loginRouter = require("./routers/login");
 // const accountRouter = require("./routers/account");
 const registerRouter = require("./routers/register");
-const dataRouter = require("./routers/data")
+const graphRouter = require("./routers/graph");
 /// -------------------------------
 
 ///----몽고DB 연결 ---------
 mongoose.set("strictQuery", false);
-mongoose.connect("mongodb+srv://team3:pt3@team3.i5gliew.mongodb.net/test");
+mongoose.connect(process.env.MONGODB_URL);
 mongoose.connection.on("connected", () => {
   console.log("정상적으로 DB와 연결되었습니다.   MongoDB Connected");
   console.log("--------------------------------------------");
@@ -27,10 +29,10 @@ app.use(express.urlencoded({ extended: false }));
 //------------------------
 
 // ------ 라우터 등록 ------
+app.use("/", graphRouter);
 // app.use("/account", accountRouter);
 app.use("/login", loginRouter);
 app.use("/register", registerRouter);
-app.use("/", dataRouter);
 //--------------------------
 
 // ------ 오류처리 미들웨어 ------
