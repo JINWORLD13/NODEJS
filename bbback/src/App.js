@@ -1,12 +1,22 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const cors = require("cors");
 
 /// ---필요한 라우터 require ---
 const loginRouter = require("./routers/login");
-const accountRouter = require("./routers/account");
+// const accountRouter = require("./routers/account");
 const registerRouter = require("./routers/register");
 /// -------------------------------
 
+///----몽고DB 연결 ---------
+mongoose.set("strictQuery", false);
+mongoose.connect("mongodb+srv://team3:pt3@team3.i5gliew.mongodb.net/test");
+mongoose.connection.on("connected", () => {
+  console.log("정상적으로 DB와 연결되었습니다.   MongoDB Connected");
+  console.log("--------------------------------------------");
+});
+
+///------------------------
 const app = express();
 
 // ------ 미들웨어 등록 ------
@@ -16,7 +26,7 @@ app.use(express.urlencoded({ extended: false }));
 //------------------------
 
 // ------ 라우터 등록 ------
-app.use("/account", accountRouter);
+// app.use("/account", accountRouter);
 app.use("/login", loginRouter);
 app.use("/register", registerRouter);
 //--------------------------
@@ -29,5 +39,10 @@ app.use((err, req, res, next) => {
   });
 });
 //------------------------
-
+///------서버 생성------------
+const port = 5000;
+app.listen(port, () =>
+  console.log(`정상적으로 서버를 시작하였습니다. http://localhost:${port}`)
+);
+///--------------------------
 module.exports = app;
