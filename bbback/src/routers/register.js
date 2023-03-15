@@ -7,13 +7,13 @@ const Regex = require("../utils/regex");
 router.post("/", async (req, res, next) => {
   console.log("---------------- 사용자 회원 가입 시도 ---------------------");
   // -------------유효성 검사--------------------------
-  if (Regex(req.body.inputName) !== true) {
+  if (Regex(req.body.inputName, 'name') !== true) {
     console.log("이름 형식이 맞지 않습니다.");
-  } else if (Regex(req.body.inputEmail) !== true) {
+  } else if (Regex(req.body.inputEmail, 'email') !== true) {
     console.log("이메일 형식이 맞지 않습니다.");
-  } else if (Regex(req.body.inputPw) !== true) {
+  } else if (Regex(req.body.inputPw, 'password') !== true) {
     console.log("비밀번호 형식이 맞지 않습니다.");
-  } else if (Regex(req.body.inputPhoneNumber) !== true) {
+  } else if (Regex(req.body.inputPhoneNumber, 'phone') !== true) {
     console.log("번호 형식이 맞지 않습니다.");
   } else {
     try {
