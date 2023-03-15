@@ -10,8 +10,8 @@ router.post("/", async (req, res, next) => {
     const createUser = req.body;
 
     // ------ 중복된 이메일 확인 ------
-    const foundEmail = await User.findOne({ email: createUser.email });
-    if (foundEmail) {
+    const foundUser = await User.findOne({ email: createUser.inputEmail });
+    if (foundUser.email) {
       console.error("중복된 이메일 존재");
       console.log(
         "---------------- 사용자 회원 가입 실패 ---------------------"
@@ -20,10 +20,18 @@ router.post("/", async (req, res, next) => {
     } else {
       // ------ 유효성 검사 (예정) ------
 
-      const hashedPassword = getHash(createUser.password);
+
+      const name = createUser.inputName;
+      const email = createUser.inputEmail;
+      const hashedPassword = getHash(createUser.inputPw);
+      const phoneNumber = createUser.inputPhoneNumber;
+      const address = createUser.selectedDistrict;
       const user = await User.create({
-        ...createUser,
+        name: name,
+        email: email,
         password: hashedPassword,
+        phoneNumber: phoneNumber,
+        address: address
       });
 
       console.log("신규 회원 : ", user);
