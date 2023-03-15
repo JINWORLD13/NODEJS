@@ -34,9 +34,9 @@ router.post("/", async (req, res, next) => {
       throw new Error("일치하는 사용자 이메일이 없음");
     }
 
-    // 찾은 user의 비밀번호와 입력된 비밀번호 일치 여부 확인
-    console.log("user.password : ", user.password);
-    console.log("getHash(password) : ", getHash(inputPw));
+    // // 찾은 user의 비밀번호와 입력된 비밀번호 일치 여부 확인
+    // console.log("user.password : ", user.password);
+    // console.log("getHash(password) : ", getHash(inputPw));
 
     // 비밀번호가 일치 하지 않음 -> 에러
     if (user.password !== getHash(inputPw)) {
@@ -54,6 +54,7 @@ router.post("/", async (req, res, next) => {
 
     // (참고) createToken.js의 주석 중 (참고) 참조.
     const token = await createToken(req, res, next);
+    console.log(buildResponse(token, 200))
 
     // 응답으로 토큰
     res.status(200).json(buildResponse(token, 200));

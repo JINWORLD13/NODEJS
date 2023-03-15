@@ -8,13 +8,9 @@ router.post("/", async (req, res, next) => {
   console.log("---------------- 사용자 회원 가입 시도 ---------------------");
   try {
     const createUser = req.body;
-
     // ------ 중복된 이메일 확인 ------
     const email = createUser.inputEmail;
     const foundUser = await User.findOne({ email });
-    console.log(createUser.inputEmail);
-    console.log(User);
-    console.log(foundUser);
     if (foundUser === null || foundUser === undefined) {
       // ------ 유효성 검사 (예정) ------
 
@@ -23,6 +19,7 @@ router.post("/", async (req, res, next) => {
       const hashedPassword = getHash(createUser.inputPw);
       const phoneNumber = createUser.inputPhoneNumber;
       const address = createUser.selectedDistrict;
+      console.log(address)
       const user = await User.create({
         name: name,
         email: email,
