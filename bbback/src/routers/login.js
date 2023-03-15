@@ -6,7 +6,7 @@ const getHash = require("../utils/hashPassword");
 const { User } = require("../db/models/model");
 // jwt 생성 모듈
 const createToken = require("../utils/createToken");
-const buildResponse = require("../utils/buildResponse")
+const buildResponse = require("../utils/buildResponse");
 
 // 로그인 패스 접근시 (로그인 버튼 클릭시)
 router.post("/", async (req, res, next) => {
@@ -15,17 +15,17 @@ router.post("/", async (req, res, next) => {
     console.log(
       "------------------- 사용자 로그인 시도 ------------------------"
     );
-    const { email, password } = req.body;
+    const { inputEmail, inputPw } = req.body;
 
-    console.log("사용자 입력 : ", email);
-    console.log("사용자 입력 : ", password);
+    console.log("사용자 입력 : ", inputEmail);
+    console.log("사용자 입력 : ", inputPw);
 
     // 데이터 베이스에 매칭되는 사용자 정보가 있는지 확인
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: inputEmail });
     console.log("user : ", user);
 
     // user 가 없으면 매칭되는 이메일이 없다
-    if (!user) {
+    if (user === null || user === undefined) {
       // 일치하는 이메일이 없음 -> 에러
       console.error("user가 없음");
       console.log(
@@ -36,10 +36,10 @@ router.post("/", async (req, res, next) => {
 
     // 찾은 user의 비밀번호와 입력된 비밀번호 일치 여부 확인
     console.log("user.password : ", user.password);
-    console.log("getHash(password) : ", getHash(password));
+    console.log("getHash(password) : ", getHash(inputPw));
 
     // 비밀번호가 일치 하지 않음 -> 에러
-    if (user.password !== getHash(password)) {
+    if (user.password !== getHash(inputPw)) {
       console.error("비밀번호 불일치");
       console.log(
         "------------------- 사용자 로그인 실패 ------------------------"
@@ -53,7 +53,7 @@ router.post("/", async (req, res, next) => {
     );
 
     // (참고) createToken.js의 주석 중 (참고) 참조.
-    const token = createToken(req, res, next);
+    const token = await createToken(req, res, next);
 
     // 응답으로 토큰
     res.status(200).json(buildResponse(token, 200));
