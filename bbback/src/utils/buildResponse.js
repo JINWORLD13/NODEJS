@@ -1,4 +1,4 @@
-export function buildResponse(data, statusCode, error) {
+function buildResponse(data, statusCode, error) {
   return {
     data, // data : 1번째 인자 data 내용이 들어감.
     statusCode: statusCode,
@@ -7,3 +7,5 @@ export function buildResponse(data, statusCode, error) {
     
   };
 }
+
+module.exports = buildResponse;

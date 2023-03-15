@@ -1,4 +1,4 @@
-const jwt = require("../jwt");
+const jwt = require("./jwt");
 const AppError = require("./AppError");
 const hashPassword = require("./hashPassword");
 const { User } = require("../db/models/model");
