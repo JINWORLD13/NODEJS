@@ -16,7 +16,7 @@ module.exports = {
   sign: (user) => {
     const accessTokenPayload = {
       // 토큰내 들어갈 정보. (가벼운 정보만 넣기)
-      type: "JWT",
+      type: "access",
       user: {
         _id: user._id,
         email: user.email,
@@ -25,14 +25,14 @@ module.exports = {
       },
     };
     const refreshTokenPayload = {
-      type: "JWT",
+      type: "refresh",
       user: {
         _id: user._id,
         email: user.email,
         name: user.name,
         role: user.role,
       },
-      canRefresh: true,
+      canRefresh: true
     };
     const result = {
       // jsonsebtoken라이브러리의 sign 메소드를 통해 access token 발급!
@@ -42,7 +42,7 @@ module.exports = {
         refreshTokenPayload,
         secretKey,
         refreshTokenOption
-      ),
+      )
     };
     return result;
   },
@@ -87,5 +87,5 @@ module.exports = {
     } catch (err) {
       return false;
     }
-  },
+  }
 };
