@@ -1,5 +1,4 @@
 // 로그인을 처리하는 핸들러
-
 const express = require("express");
 const router = express.Router();
 const getHash = require("../utils/hashPassword");
@@ -17,12 +16,8 @@ router.post("/", async (req, res, next) => {
     );
     const { inputEmail, inputPw } = req.body;
 
-    console.log("사용자 입력 : ", inputEmail);
-    console.log("사용자 입력 : ", inputPw);
-
     // 데이터 베이스에 매칭되는 사용자 정보가 있는지 확인
     const user = await User.findOne({ email : inputEmail });
-    console.log("user : ", user);
 
     // user 가 없으면 매칭되는 이메일이 없다
     if (user === null || user === undefined) {
@@ -33,10 +28,6 @@ router.post("/", async (req, res, next) => {
       );
       throw new Error("일치하는 사용자 이메일이 없음");
     }
-
-    // // 찾은 user의 비밀번호와 입력된 비밀번호 일치 여부 확인
-    // console.log("user.password : ", user.password);
-    // console.log("getHash(password) : ", getHash(inputPw));
 
     // 비밀번호가 일치 하지 않음 -> 에러
     if (user.password !== getHash(inputPw)) {

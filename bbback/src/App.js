@@ -11,6 +11,8 @@ const loginRouter = require("./routers/login");
 // const accountRouter = require("./routers/account");
 const registerRouter = require("./routers/register");
 const withdrawRouter = require("./routers/withdraw");
+const modifyRouter = require("./routers/modify");
+const userRouter = require("./routers/user");
 const graphRouter = require("./routers/graph");
 // const districtsRouter = require("./routers/districts");
 /// -------------------------------
@@ -45,6 +47,8 @@ app.use("/", graphRouter);
 app.use("/login", loginRouter);
 app.use("/register", registerRouter);
 app.use("/withdraw", withdrawRouter);
+app.use("/user", userRouter);
+app.use("/modify", modifyRouter);
 // app.use("/districts", districtsRouter);
 //--------------------------
 
