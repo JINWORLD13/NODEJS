@@ -20,7 +20,6 @@
     "nanoid": "^4.0.1",
     "nodemon": "^2.0.21",
     "path": "^0.12.7",
-    "rand-token": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",

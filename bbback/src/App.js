@@ -10,6 +10,7 @@ const buildResponse = require("./utils/buildResponse");
 const loginRouter = require("./routers/login");
 // const accountRouter = require("./routers/account");
 const registerRouter = require("./routers/register");
+const withdrawRouter = require("./routers/withdraw");
 const graphRouter = require("./routers/graph");
 // const districtsRouter = require("./routers/districts");
 /// -------------------------------
@@ -43,6 +44,7 @@ app.use("/", graphRouter);
 // app.use("/account", accountRouter);
 app.use("/login", loginRouter);
 app.use("/register", registerRouter);
+app.use("/withdraw", withdrawRouter);
 // app.use("/districts", districtsRouter);
 //--------------------------
 
