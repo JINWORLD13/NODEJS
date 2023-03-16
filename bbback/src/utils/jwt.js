@@ -1,5 +1,9 @@
 const jwt = require("jsonwebtoken");
-const redisClient = require("redis").createClient(5000); // ! 3000으로 해야 할까.
+const redis = require("redis");
+const redisClient = redis.createClient({
+  host: "localhost",
+  port: 6379,
+}); // ! 3000으로 해야 할까.
 const { promisify } = require("util");
 const secretKey = require("../config/secretKey").secretKey;
 const accessTokenOption = require("../config/secretKey").accessTokenOption;
@@ -14,20 +18,31 @@ module.exports = {
       // 토큰내 들어갈 정보. (가벼운 정보만 넣기)
       type: "JWT",
       user: {
+        _id: user._id,
         email: user.email,
         name: user.name,
         role: user.role,
-      }
+      },
+    };
+    const refreshTokenPayload = {
+      type: "JWT",
+      user: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
+      canRefresh: true,
     };
     const result = {
       // jsonsebtoken라이브러리의 sign 메소드를 통해 access token 발급!
       // jwt.sign( { 토큰이 가질 데이터(payload), 비밀 키, 옵션, 콜백함수(보통 에러 핸들링에 사용) } )
-      accessToken: jwt.sign(
-        accessTokenPayload,
+      accessToken: jwt.sign(accessTokenPayload, secretKey, accessTokenOption),
+      refreshToken: jwt.sign(
+        refreshTokenPayload,
         secretKey,
-        accessTokenOption
+        refreshTokenOption
       ),
-      refreshToken: jwt.sign({}, secretKey, refreshTokenOption),
     };
     return result;
   },
@@ -72,5 +87,5 @@ module.exports = {
     } catch (err) {
       return false;
     }
-  }
+  },
 };
