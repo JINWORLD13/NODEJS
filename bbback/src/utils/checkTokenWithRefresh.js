@@ -28,18 +28,17 @@ const checkTokenWithRefresh = async (req, res, next) => {
 
       /* access token의 decoding 된 값에서
           유저의 이메일을 가져와 refresh token을 검증합니다. */
-      const newAccessToken = refreshVerify(
+      const refreshTokenVerifyResult = refreshVerify(
         refreshToken,
         decodedAccessTokenPayload.user._id
       );
-      console.log("newAccessToken", newAccessToken);
 
       // 재발급을 위해서는 access token이 만료되어 있어야합니다.
       if (accessTokenVerifyResult?.message === "jwt expired") {
         // 1. access token이 만료되고, refresh token도 만료(혹은 유효하지 않은 경우도) 된 경우 => 새로 로그인해야합니다.
         if (
-          newAccessToken?.message === "jwt expired" ||
-          newAccessToken?.message === "invalid token"
+          refreshTokenVerifyResult?.error?.message === "jwt expired" ||
+          refreshTokenVerifyResult?.error?.message === "invalid token"
         ) {
           next(
             new AppError(
@@ -51,10 +50,10 @@ const checkTokenWithRefresh = async (req, res, next) => {
         } else {
           // 2. access token이 만료되고, refresh token은 만료되지 않은 경우 => 새로운 access token을 발급
           const data = {
-            newAccessToken,
+            newAccessToken : refreshTokenVerifyResult.newAccessToken,
             refreshToken,
           };
-          res.status(200).json(buildResponse(data, 200, null)); //! newAccessToken 줌(여기서 중요)(받으면 다시 재 시도 해야 함. 프론트에서)
+          res.status(200).json(buildResponse(data, 200, null)); //! refreshTokenVerifyResult 줌(여기서 중요)(받으면 다시 재 시도 해야 함. 프론트에서)
         }
       } else {
         // 3. access token이 만료되지 않은경우 => refresh 할 필요가 없습니다.

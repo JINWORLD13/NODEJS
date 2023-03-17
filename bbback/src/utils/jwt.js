@@ -69,7 +69,7 @@ module.exports = {
         401
       );
     return jwt.verify(refreshToken, secretKey, (error, result) => {
-      if (error) return error // 시간계산 로직을 쓰면 더 세분화됨.
+      if (error) return {error} // 시간계산 로직을 쓰면 더 세분화됨.
       if (result.user._id === userId) {
         const accessTokenPayload = {
           // 토큰내 들어갈 정보. (가벼운 정보만 넣기)
@@ -82,7 +82,7 @@ module.exports = {
           },
         };
         const newAccessToken = jwt.sign(accessTokenPayload, secretKey, accessTokenOption);
-        return newAccessToken;
+        return {newAccessToken};
       }
     });
   },

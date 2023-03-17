@@ -1,13 +1,11 @@
 const jwt = require("./jwt");
 const AppError = require("./AppError");
-const getHash = require("./hashPassword");
 const { User } = require("../db/models/model");
 
 const createToken = async (req, res, next) => {
   try {
     let user = await User.findOne({
       email: req.body.inputEmail,
-      password: getHash(req.body.inputPw),
     });
 
     // 발생할 수 있는 오류들 thorw new Error() 이런식으로
