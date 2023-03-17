@@ -1,9 +1,13 @@
 const jwt = require("jsonwebtoken");
 const redis = require("redis");
-const redisClient = redis.createClient({
-  host: "localhost",
-  port: 6379,
-}); // ! 3000으로 해야 할까.
+const redisClient = redis.createClient();
+redisClient.on("error", (err) => {
+  console.error("Redis error:", err);
+});
+
+redisClient.on('connect', () => {
+  console.log('Redis redisClient connected')
+});
 const { promisify } = require("util");
 const secretKey = require("../config/secretKey").secretKey;
 const accessTokenOption = require("../config/secretKey").accessTokenOption;
@@ -32,7 +36,7 @@ module.exports = {
         name: user.name,
         role: user.role,
       },
-      canRefresh: true
+      canRefresh: true,
     };
     const result = {
       // jsonsebtoken라이브러리의 sign 메소드를 통해 access token 발급!
@@ -42,7 +46,7 @@ module.exports = {
         refreshTokenPayload,
         secretKey,
         refreshTokenOption
-      )
+      ),
     };
     return result;
   },
@@ -66,26 +70,32 @@ module.exports = {
     return decodedPayload;
   },
 
-  refreshVerify: async (refreshToken, userEmail) => {
+  refreshVerify: async (refreshToken, userId) => {
     // refresh token 검증
     /* redis 모듈은 기본적으로 promise를 반환하지 않으므로,
        promisify를 이용하여 promise를 반환하게 해줍니다.*/
-    const getAsync = promisify(redisClient.get).bind(redisClient);
+    const getAsync = await promisify(redisClient.get).bind(redisClient);
+    console.log('getAsync', getAsync);
 
     try {
-      const data = await getAsync(userEmail); // refresh token 가져오기
+      const data = getAsync(userId); // refresh token 가져오기
+      console.log("data", data);
       if (refreshToken === data) {
         try {
           jwt.verify(refreshToken, secretKey);
+          console.log("여기2");
           return true;
         } catch (err) {
+          console.log("여기3");
           return false;
         }
       } else {
+        console.log("여기4");
         return false;
       }
     } catch (err) {
+      console.log("여기5");
       return false;
     }
-  }
+  },
 };

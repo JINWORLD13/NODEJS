@@ -12,6 +12,7 @@ router.delete("/", checkTokenWithRefresh, async (req, res, next) => {
       "------------------- 사용자 회원탈퇴 시도 ------------------------"
     );
     const inputPw = req.body.inputPw;
+    console.log(inputPw)
 
     // 데이터 베이스에 매칭되는 사용자 정보가 있는지 확인
     const user = await User.deleteOne({ inputPw : getHash(inputPw) })

@@ -45,7 +45,6 @@ router.post("/", async (req, res, next) => {
 
     // (참고) createToken.js의 주석 중 (참고) 참조.
     const token = await createToken(req, res, next);
-    console.log(token)
 
     // 응답으로 토큰
     res.status(200).json(buildResponse(token, 200));
