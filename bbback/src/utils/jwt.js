@@ -47,16 +47,9 @@ module.exports = {
     try {
       // verify를 통해 값 decode!
       decodedPayload = jwt.verify(token, secretKey);
-    } catch (err) {
+    } catch (error) {
       // ! 이미 시스템 내부에서 err 메세지('jwt expired', 'invalid token')를 정의해 놓음.
-      if (err.message === "jwt expired") {
-        // ! 해당 에러나면 verify() 리턴값이 이게 되네.
-        return TOKEN_EXPIRED;
-      } else if (err.message === "invalid token") {
-        return TOKEN_INVALID;
-      } else {
-        return TOKEN_INVALID;
-      }
+      return {error}
     }
     return decodedPayload;
   },

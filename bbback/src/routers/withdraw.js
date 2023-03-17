@@ -28,7 +28,7 @@ router.delete("/", checkTokenWithRefresh, async (req, res, next) => {
 
     await User.deleteOne({ password: getHash(inputPw) })
     // 회원탈퇴 성공
-    res.status(204).json(buildResponse({message: "삭제됨"}, 204));
+    res.status(204).json(); // 204쓰면 json 전달 안됨.
     console.log(
       "------------------- 사용자 회원탈퇴 성공 ------------------------"
     );

@@ -31,7 +31,7 @@ router.get("/", checkTokenWithRefresh, async (req, res, next) => {
       address: user.address,
       role: user.role,
     };
-    console.log({userInfo});
+
     // 사용자 정보 보내기
     res.status(200).json(buildResponse({userInfo}, 200));
     console.log(
