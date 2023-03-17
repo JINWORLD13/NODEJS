@@ -30,15 +30,13 @@ router.post("/", async (req, res, next) => {
         const hashedPassword = getHash(createUser.inputPw);
         const phoneNumber = createUser.inputPhoneNumber;
         const address = createUser.selectedDistrict;
-        const user = await User.create({
+        await User.create({
           name: name,
           email: email,
           password: hashedPassword,
           phoneNumber: phoneNumber,
           address: address,
         });
-
-        console.log("신규 회원 : ", user);
 
         console.log(
           "---------------- 사용자 회원 가입 성공 ---------------------"

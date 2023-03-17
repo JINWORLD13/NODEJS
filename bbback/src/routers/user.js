@@ -2,17 +2,15 @@ const express = require("express");
 const router = express.Router();
 const { User } = require("../db/models/model");
 const buildResponse = require("../utils/buildResponse");
-const checkToken = require("../utils/checkToken");
 const checkTokenWithRefresh = require("../utils/checkTokenWithRefresh");
 
 // 사용자 정보 접근
-router.get("/", checkToken, async (req, res, next) => {
+router.get("/", checkTokenWithRefresh, async (req, res, next) => {
   try {
     console.log(
       "------------------- 사용자 정보 불러오기 시도 ------------------------"
     );
     const originalEmail = req.user.email;
-    console.log(originalEmail)
 
     // 데이터 베이스에 매칭되는 사용자 정보가 있는지 확인
     const user = await User.findOne({ email: originalEmail });
@@ -31,10 +29,11 @@ router.get("/", checkToken, async (req, res, next) => {
       name: user.name,
       phoneNumber: user.phoneNumber,
       address: user.address,
+      role: user.role,
     };
-
+    console.log({userInfo});
     // 사용자 정보 보내기
-    res.status(200).json(buildResponse(userInfo, 200));
+    res.status(200).json(buildResponse({userInfo}, 200));
     console.log(
       "------------------- 사용자 정보 불러오기 성공 ------------------------"
     );

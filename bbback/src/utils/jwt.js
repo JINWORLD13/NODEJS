@@ -1,14 +1,5 @@
 const jwt = require("jsonwebtoken");
-const redis = require("redis");
-const redisClient = redis.createClient();
-redisClient.on("error", (err) => {
-  console.error("Redis error:", err);
-});
-
-redisClient.on('connect', () => {
-  console.log('Redis redisClient connected')
-});
-const { promisify } = require("util");
+const AppError = require("./AppError");
 const secretKey = require("../config/secretKey").secretKey;
 const accessTokenOption = require("../config/secretKey").accessTokenOption;
 const refreshTokenOption = require("../config/secretKey").refreshTokenOption;
@@ -70,32 +61,29 @@ module.exports = {
     return decodedPayload;
   },
 
-  refreshVerify: async (refreshToken, userId) => {
-    // refresh token 검증
-    /* redis 모듈은 기본적으로 promise를 반환하지 않으므로,
-       promisify를 이용하여 promise를 반환하게 해줍니다.*/
-    const getAsync = await promisify(redisClient.get).bind(redisClient);
-    console.log('getAsync', getAsync);
-
-    try {
-      const data = getAsync(userId); // refresh token 가져오기
-      console.log("data", data);
-      if (refreshToken === data) {
-        try {
-          jwt.verify(refreshToken, secretKey);
-          console.log("여기2");
-          return true;
-        } catch (err) {
-          console.log("여기3");
-          return false;
-        }
-      } else {
-        console.log("여기4");
-        return false;
+  refreshVerify: (refreshToken, userId) => {
+    if (!refreshToken)
+      throw new AppError(
+        "no refresh token",
+        "리프레시 토큰이 없습니다. 다시 로그인 해주세요.",
+        401
+      );
+    return jwt.verify(refreshToken, secretKey, (error, result) => {
+      if (error) return error // 시간계산 로직을 쓰면 더 세분화됨.
+      if (result.user._id === userId) {
+        const accessTokenPayload = {
+          // 토큰내 들어갈 정보. (가벼운 정보만 넣기)
+          type: "access",
+          user: {
+            _id: result.user._id,
+            email: result.user.email,
+            name: result.user.name,
+            role: result.user.role,
+          },
+        };
+        const newAccessToken = jwt.sign(accessTokenPayload, secretKey, accessTokenOption);
+        return newAccessToken;
       }
-    } catch (err) {
-      console.log("여기5");
-      return false;
-    }
+    });
   },
 };

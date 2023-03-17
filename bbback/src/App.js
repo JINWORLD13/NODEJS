@@ -42,7 +42,7 @@ app.use(express.urlencoded({ extended: false }));
 //------------------------
 
 // ------ 라우터 등록 ------
-app.use("/", graphRouter);
+app.use("/graph", graphRouter);
 // app.use("/account", accountRouter);
 app.use("/login", loginRouter);
 app.use("/register", registerRouter);
